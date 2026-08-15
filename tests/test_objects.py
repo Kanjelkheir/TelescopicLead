@@ -29,12 +29,12 @@ class Test_company(unittest.TestCase):
         company3 = Company("testCorp", 5)
         company4 = Company("heyCorp", 30)
 
-        self.assertEqual(company.set_company_size(), CompanySize.LARGE)
-        self.assertEqual(company2.set_company_size(), CompanySize.MEDIUM)
+        self.assertEqual(company.company_size, CompanySize.LARGE)
+        self.assertEqual(company2.company_size, CompanySize.MEDIUM)
         with self.assertRaises(InvalidCompanyEmployees):
             _ = Company("comp", -1)
-        self.assertEqual(company3.set_company_size(), CompanySize.MICRO)
-        self.assertEqual(company4.set_company_size(), CompanySize.SMALL)
+        self.assertEqual(company3.company_size, CompanySize.MICRO)
+        self.assertEqual(company4.company_size, CompanySize.SMALL)
 
 
 if __name__ == "__main__":
