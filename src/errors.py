@@ -16,3 +16,7 @@ class InvalidCompanyName(Exception):
 
 class InvalidCompanyEmployees(Exception):
     pass
+
+
+class ErrorFetching(Exception):
+    pass
