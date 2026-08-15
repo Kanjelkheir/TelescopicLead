@@ -99,8 +99,6 @@ class Person:
 
 @final
 class Lead:
-    """Combines Person details with their Company context and Seniority for search/prospecting."""
-
     def __init__(
         self,
         person: Person,
