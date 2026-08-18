@@ -1,2 +1,1 @@
-cd src
-uv run main.py
+uv run -m src.main "$@"
