@@ -8,6 +8,7 @@ from src.errors import (
     InvalidCompanyName,
     InvalidEmail,
     InvalidJobTitle,
+    InvalidLocation,
 )
 
 
@@ -99,56 +100,16 @@ class Person:
 
 @final
 class Lead:
-    def __init__(
-        self,
-        person: Person,
-        company: Company | None = None,
-        seniority: SeniorityLevel | None = None,
-        department: str | None = None,
-    ):
-        self.person = person
-        self.company = company
-        self.seniority = seniority or self._infer_seniority(person.job_title)
-        self.department = department
+    def __init__(self, job_title: str, location: str, industry: str | None = None):
+        if len(job_title) == 0:
+            raise InvalidJobTitle("empty job title")
+        if len(location) == 0:
+            raise InvalidLocation("empty location")
 
-    # helper method to infer seniority from the job title provided
-    def _infer_seniority(self, job_title: str) -> SeniorityLevel:
-
-        title_lower = job_title.lower()
-
-        if any(
-            term in title_lower
-            for term in ["owner", "founder", "co-founder", "proprietor"]
-        ):
-            return SeniorityLevel.OWNER
-        elif any(
-            term in title_lower
-            for term in ["chief", "ceo", "cto", "cfo", "coo", "c-level"]
-        ):
-            return SeniorityLevel.EXECUTIVE
-        elif "vp" in title_lower or "vice president" in title_lower:
-            return SeniorityLevel.VP
-        elif "director" in title_lower or "head of" in title_lower:
-            return SeniorityLevel.DIRECTOR
-        elif "manager" in title_lower or "lead" in title_lower:
-            return SeniorityLevel.MANAGER
-        elif "senior" in title_lower or "sr" in title_lower:
-            return SeniorityLevel.SENIOR
-        elif "junior" in title_lower or "jr" in title_lower or "intern" in title_lower:
-            return SeniorityLevel.ENTRY
-
-        return SeniorityLevel.MID
-
-    @override
-    def __repr__(self) -> str:
-        comp_name = (
-            self.company.company_name if self.company else "Independent / Unknown"
-        )
-        return (
-            f"Lead({self.person.first_name} {self.person.last_name} | "
-            f"Title: {self.person.job_title} [{self.seniority.value}] | "
-            f"Company: {comp_name})"
-        )
+        self.job_title = job_title
+        self.location = location
+        if industry:
+            self.industry = industry
 
 
 def validate_email(email: str) -> bool:
