@@ -20,3 +20,11 @@ class InvalidCompanyEmployees(Exception):
 
 class ErrorFetching(Exception):
     pass
+
+
+class InvalidLocation(Exception):
+    pass
+
+
+class InvalidIndustry(Exception):
+    pass
