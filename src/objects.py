@@ -1,12 +1,16 @@
+from __future__ import annotations
+
 import re
 from enum import Enum, StrEnum
 from typing import final, override
 
+from map_utils import get_place_coordinates_and_zone
 from src.errors import (
     EmptyFirstName,
     InvalidCompanyEmployees,
     InvalidCompanyName,
     InvalidEmail,
+    InvalidIndustry,
     InvalidJobTitle,
     InvalidLocation,
 )
@@ -32,7 +36,14 @@ class SeniorityLevel(StrEnum):
 
 @final
 class Company:
-    def __init__(self, company_name: str, number_of_employees: int | None = None):
+    def __init__(
+        self,
+        company_name: str,
+        address: str,
+        phone_number: str,
+        website: str,
+        number_of_employees: int | None = None,
+    ):
         if len(company_name.strip()) == 0:
             raise InvalidCompanyName("Company name cannot be empty")
 
@@ -40,7 +51,11 @@ class Company:
             raise InvalidCompanyEmployees("Company must have 1 or more employees")
 
         self.company_name = company_name
+        self.address = address
+        self.phone_number = phone_number
+        self.website = website
         self.number_of_employees = number_of_employees
+        self.employees: list[Person] = []
         self.company_size: CompanySize | None = self._determine_company_size()
 
     def _determine_company_size(self) -> CompanySize | None:
@@ -64,8 +79,8 @@ class Person:
         self,
         first_name: str,
         last_name: str,
-        job_title: str,
         email: str,
+        job_title: str = "",
         location: str | None = None,
         phone_number: str | None = None,
     ):
@@ -110,6 +125,24 @@ class Lead:
         self.location = location
         if industry:
             self.industry = industry
+
+
+@final
+class BusinessLead:
+    def __init__(
+        self,
+        industry: str,
+        place: str,
+    ):
+        if len(industry) == 0:
+            raise InvalidIndustry
+        coords = get_place_coordinates_and_zone(place)
+
+        self.industry = industry
+        if isinstance(coords, dict):
+            self.longitude: float = float(coords["longitude"])
+            self.latitude: float = float(coords["latitude"])
+            self.zone: str = coords["UTM Zone"]
 
 
 def validate_email(email: str) -> bool:
