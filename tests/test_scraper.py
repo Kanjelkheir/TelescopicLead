@@ -11,7 +11,7 @@ class TestGetHtml(unittest.TestCase):
         print(f"HTML: {html}")
 
     def test_output(self):
-        scrape("Carpenter", "Beirut")
+        scrape("https://example.com")
 
 
 if __name__ == "__main__":
